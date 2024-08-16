@@ -10,6 +10,7 @@ export default function Play() {
     const [callhd, setCallhd] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [expectedNumber, setExpectedNumber] = useState(1);
+    const [errorMessage, setErrorMessage] = useState('');
     const containerWidth = 500;
     const containerHeight = 400;
     useEffect(() => {
@@ -31,6 +32,11 @@ export default function Play() {
         }
     }, [show1, increment])
     const handleStart = () => {
+        if (!number) {
+            setErrorMessage('Please enter a number before starting!');
+            return;
+        }
+        setErrorMessage('');
         setShow1(true);
         setShowsecond(true);
         setCallhd(true);
@@ -57,10 +63,9 @@ export default function Play() {
             }, 1000);
         } else {
             setShowsecond(false);
-            setSuccessMessage('Game over');
+            setSuccessMessage('GAMVE OVER');
         }
     };
-
     return (
         <div>
             <p>Play Gamer</p>
@@ -68,6 +73,7 @@ export default function Play() {
                 value={number}
                 onChange={e => setNumber(e.target.value)}
             />
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             <p>Time: {counter} s</p>
             {callhd ? (
                 <p onClick={handleRestar}
