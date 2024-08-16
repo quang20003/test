@@ -1,0 +1,21 @@
+
+.body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #FFFFFF;
+    color: #000;
+    font-size: 10px;
+    font-weight: bold;
+    border: 1px solid #000;
+    cursor: pointer;
+    transition: background-color 0.3s, opacity 0.3s;
+  }
+  
+  .body:hover {
+    background-color: #D51313;
+    color: #000;
+  }
