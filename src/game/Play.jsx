@@ -1,10 +1,26 @@
-
-import { useEffect, useLayoutEffect, useState, useMemo } from "react";
+import React, { useEffect, useLayoutEffect, useState, useMemo, memo } from "react";
 import "./style.css";
 import { getRandomPosition } from "./utils";
+
+const NumberComponent = memo(({ item, position, onRemove }) => (
+    <p
+        onClick={() => onRemove(item)}
+        className="body"
+        style={{
+            top: `${position.top}%`,
+            left: `${position.left}%`,
+            fontSize: 10,
+            position: 'absolute'
+        }}
+    >
+        {item}
+    </p>
+));
+
 export default function Play() {
     const [number, setNumber] = useState('');
     const [numbers, setNumbers] = useState([]);
+    const [positions, setPositions] = useState({});
     const [counter, setCounter] = useState(0.0);
     const [increment, setIncrement] = useState(1);
     const [showsecond, setShowsecond] = useState(false);
@@ -30,8 +46,17 @@ export default function Play() {
 
     useEffect(() => {
         if (show1 && increment <= number) {
-            setNumbers((pre) => [...pre, increment]);
-            setIncrement((prever) => prever + 1);
+            const newNumber = increment;
+            setNumbers((prev) => [...prev, newNumber]);
+
+            // Generate and store position for the new number
+            const { top, left } = getRandomPosition(containerWidth, containerHeight);
+            setPositions((prevPositions) => ({
+                ...prevPositions,
+                [newNumber]: { top, left }
+            }));
+
+            setIncrement((prevIncrement) => prevIncrement + 1);
         }
     }, [show1, increment]);
 
@@ -49,6 +74,7 @@ export default function Play() {
     const handleRestar = () => {
         setCounter(0);
         setNumbers([]);
+        setPositions({});
         setIncrement(1);
         setExpectedNumber(1);
         setSuccessMessage('');
@@ -74,25 +100,15 @@ export default function Play() {
     };
 
     const memoizedNumbers = useMemo(() => {
-        return numbers.map((item, index) => {
-            const { top, left } = getRandomPosition(containerWidth, containerHeight);
-            return (
-                <p
-                    key={index}
-                    onClick={() => handleRemoveNumber(item)}
-                    className="body"
-                    style={{
-                        top: `${top}%`,
-                        left: `${left}%`,
-                        fontSize: 10,
-                        position: 'absolute'
-                    }}
-                >
-                    {item}
-                </p>
-            );
-        });
-    }, [numbers]);
+        return numbers.map((item) => (
+            <NumberComponent
+                key={item}
+                item={item}
+                position={positions[item]}
+                onRemove={handleRemoveNumber}
+            />
+        ));
+    }, [numbers, positions]);
 
     return (
         <div>
