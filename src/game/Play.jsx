@@ -48,8 +48,6 @@ export default function Play() {
         if (show1 && increment <= number) {
             const newNumber = increment;
             setNumbers((prev) => [...prev, newNumber]);
-
-            // Generate and store position for the new number
             const { top, left } = getRandomPosition(containerWidth, containerHeight);
             setPositions((prevPositions) => ({
                 ...prevPositions,
@@ -114,11 +112,13 @@ export default function Play() {
         <div>
             <p>Play Gamer</p>
             <input
-                value={number}
-                onChange={e => setNumber(e.target.value)}
-            />
+                className="input"
+                    value={number}
+                    onChange={e => setNumber(e.target.value)}
+                />
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-            <p>Time: {counter} s</p>
+                <p>Time:</p>
+                <p >{counter} s</p>
             {callhd ? (
                 <p onClick={handleRestar}
                     style={{
